@@ -1,124 +1,154 @@
-
-name: Derle ve Yayınla
+name: Turtle GUI - Derle ve Yayınla
 
 on:
   push:
     branches: [main]
     tags: ["v*"]
   pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
 
-env:
-  CARGO_TERM_COLOR: always
-  BIN_NAME: turtle
+concurrency:
+  group: turtle-gui-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   build:
-    name: Derle (${{ matrix.target }})
+    name: GUI Derle (${{ matrix.label }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          # Linux x64
-          - os: ubuntu-latest
-            target: x86_64-unknown-linux-gnu
-            archive: tar.gz
-
-          # Windows x64
-          - os: windows-latest
-            target: x86_64-pc-windows-msvc
-            archive: zip
-
-          # macOS Apple Silicon (ARM64)
-          - os: macos-26
-            target: aarch64-apple-darwin
-            archive: tar.gz
-
-          # macOS Intel (x86_64)
-          - os: macos-26-intel
-            target: x86_64-apple-darwin
-            archive: tar.gz
+          - label: linux-x64
+            os: ubuntu-24.04
+            platform: linux
+            arch: x86_64
+          - label: windows-x64
+            os: windows-latest
+            platform: windows
+            arch: x86_64
+          - label: macos-arm64
+            os: macos-26
+            platform: macos
+            arch: arm64
+          - label: macos-intel
+            os: macos-26-intel
+            platform: macos
+            arch: x86_64
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Kaynak kodunu al
+        uses: actions/checkout@v7
 
-      - uses: dtolnay/rust-toolchain@stable
+      - name: Python kur
+        uses: actions/setup-python@v7
         with:
-          targets: ${{ matrix.target }}
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-build.txt
 
-      - uses: Swatinem/rust-cache@v2
-        with:
-          key: ${{ matrix.target }}
-
-      # pnet, Windows'ta bağlama (link) aşamasında Packet.lib ister (Npcap SDK).
-      - name: Npcap SDK kur (yalnızca Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
+      - name: Linux GUI sistem bağımlılıklarını kur
+        if: runner.os == 'Linux'
         run: |
-          Invoke-WebRequest -Uri "https://npcap.com/dist/npcap-sdk-1.13.zip" -OutFile npcap-sdk.zip
-          Expand-Archive -Path npcap-sdk.zip -DestinationPath npcap-sdk
-          "LIB=$env:GITHUB_WORKSPACE\npcap-sdk\Lib\x64;$env:LIB" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          sudo apt-get update
+          sudo apt-get install -y python3-tk tk-dev tcl-dev libpcap0.8-dev
 
-      - name: Derle
-        run: cargo build --release --target ${{ matrix.target }}
-
-      - name: Paketle
+      - name: Python ve Tk kontrolü
         shell: bash
         run: |
-          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
-            VERSION="${GITHUB_REF_NAME}"
-          else
-            VERSION="dev-${GITHUB_SHA::7}"
-          fi
+          python --version
+          python - <<'PY'
+          import platform
+          import tkinter
+          print(f"Python architecture: {platform.machine()}")
+          print(f"Tk version: {tkinter.TkVersion}")
+          expected = "${{ matrix.arch }}"
+          actual = platform.machine().lower()
+          aliases = {"amd64": "x86_64", "x64": "x86_64", "aarch64": "arm64"}
+          actual = aliases.get(actual, actual)
+          if actual != expected:
+              raise SystemExit(f"Runner architecture mismatch: expected {expected}, got {actual}")
+          PY
 
-          NAME="${BIN_NAME}-${VERSION}-${{ matrix.target }}"
-          mkdir "$NAME"
+      - name: Bağımlılıkları kur
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-build.txt
 
-          if [[ "${{ runner.os }}" == "Windows" ]]; then
-            cp "target/${{ matrix.target }}/release/${BIN_NAME}.exe" "$NAME/"
-          else
-            cp "target/${{ matrix.target }}/release/${BIN_NAME}" "$NAME/"
-          fi
+      - name: Ağ yardımcı testlerini çalıştır
+        run: python -m unittest discover -s tests -v
 
-          cp README.md LICENSE "$NAME/"
+      - name: Windows GUI uygulamasını derle
+        if: runner.os == 'Windows'
+        run: >-
+          pyinstaller --noconfirm --clean --onefile --windowed
+          --name Turtle --collect-all scapy app.py
 
-          if [[ "${{ matrix.archive }}" == "zip" ]]; then
-            7z a "${NAME}.zip" "$NAME"
-            echo "ASSET=${NAME}.zip" >> "$GITHUB_ENV"
-          else
-            tar -czf "${NAME}.tar.gz" "$NAME"
-            echo "ASSET=${NAME}.tar.gz" >> "$GITHUB_ENV"
-          fi
+      - name: Linux GUI uygulamasını derle
+        if: runner.os == 'Linux'
+        run: >-
+          pyinstaller --noconfirm --clean --onefile --windowed
+          --name Turtle --collect-all scapy app.py
 
-      - uses: actions/upload-artifact@v4
+      - name: macOS GUI uygulamasını derle
+        if: runner.os == 'macOS'
+        run: >-
+          pyinstaller --noconfirm --clean --windowed --onedir
+          --name Turtle --osx-bundle-identifier com.cnky.turtle
+          --collect-all scapy app.py
+
+      - name: Sürüm dosyasını paketle
+        shell: bash
+        env:
+          TURTLE_PLATFORM: ${{ matrix.platform }}
+          TURTLE_ARCH: ${{ matrix.arch }}
+          GITHUB_REF_TYPE: ${{ github.ref_type }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_SHA: ${{ github.sha }}
+        run: python scripts/package_release.py
+
+      - name: Derleme varlığını yükle
+        uses: actions/upload-artifact@v7
         with:
-          name: ${{ matrix.target }}
-          path: ${{ env.ASSET }}
+          name: turtle-gui-${{ matrix.label }}
+          path: release-assets/*
           if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
 
   release:
-    name: GitHub Release oluştur
+    name: GitHub GUI Release yayınla
     needs: build
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Derleme dosyalarını indir
+        uses: actions/download-artifact@v7
         with:
           path: dist
           merge-multiple: true
 
       - name: SHA256 özetlerini üret
-        working-directory: dist
-        run: sha256sum * > SHA256SUMS.txt
+        shell: bash
+        run: |
+          cd dist
+          sha256sum * > SHA256SUMS.txt
 
-      - uses: softprops/action-gh-release@v2
+      - name: Release oluştur veya güncelle
+        uses: softprops/action-gh-release@v3
         with:
-          files: dist/*
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('build-{0}-{1}', github.run_number, github.run_attempt) }}
+          name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('Turtle GUI development build #{0}', github.run_number) }}
+          target_commitish: ${{ github.sha }}
+          prerelease: ${{ !startsWith(github.ref, 'refs/tags/') }}
           generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: |
+            dist/*
