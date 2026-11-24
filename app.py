@@ -120,7 +120,7 @@ class TurtleApp(tk.Tk):
         bottom = tk.Frame(self.sidebar, bg=SIDEBAR)
         bottom.pack(side="bottom", fill="x", padx=18, pady=18)
         tk.Frame(bottom, bg=BORDER, height=1).pack(fill="x", pady=(0, 13))
-        tk.Label(bottom, text="Turtle GUI  ·  v1.0.0", bg=SIDEBAR,
+        tk.Label(bottom, text="Turtle GUI  ·  v1.1.0", bg=SIDEBAR,
                  fg=MUTED, font=(FONT, 8)).pack(anchor="w")
         tk.Label(bottom, text="Eğitim ve yetkili kullanım için", bg=SIDEBAR,
                  fg="#647b96", font=(FONT, 8)).pack(anchor="w", pady=(4, 0))
@@ -496,7 +496,7 @@ class TurtleApp(tk.Tk):
         panel.pack(fill="both", expand=True)
         tk.Label(panel, text="TURTLE  /  NETWORK EXPLORER", bg=PANEL, fg=ACCENT,
                  font=(FONT, 17, "bold")).pack(anchor="w")
-        tk.Label(panel, text="Sürüm 1.0.0  ·  Python + Tkinter", bg=PANEL, fg=MUTED,
+        tk.Label(panel, text="Sürüm 1.1.0  ·  Python + Tkinter", bg=PANEL, fg=MUTED,
                  font=(FONT, 9)).pack(anchor="w", pady=(5, 18))
         tk.Label(panel, text=(
                  "Bu masaüstü arayüzü cn-Ky/Turtle deposundaki ağ keşif kapsamını Python ile yeniden uygular.\n\n"

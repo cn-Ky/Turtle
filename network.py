@@ -19,7 +19,7 @@ from typing import Callable, Iterable
 
 import psutil
 
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.1.0"
 
 VENDORS = {
     "001A11": "Google", "3C5AB4": "Google", "F4F5D8": "Google",
