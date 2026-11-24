@@ -16,3 +16,6 @@ Rust ile yazılmış, Windows / macOS / Linux üzerinde çalışan, sade ve Tür
 | `yakala` | Kendi arayüzünde **başlık düzeyinde** paket özeti gösterir (TCP/UDP/DNS/ICMP/ARP) |
 | `port` | Hedefte açık TCP portlarını tarar |
 | `guncelle` | Yeni sürüm varsa indirir ve programı günceller |
+
+
+## Console App -> GUI (Graphical User Interface) uygulaması yakın zamanda gerçekleştirilecektir.
