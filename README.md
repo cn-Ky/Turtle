@@ -15,6 +15,7 @@ Rust ile yazılmış, Windows / macOS / Linux üzerinde çalışan, sade ve Tür
 | `lan` | Bağlı olduğun yerel ağdaki cihazları ARP ile keşfeder (IP, MAC, üretici, ana bilgisayar adı) |
 | `yakala` | Kendi arayüzünde **başlık düzeyinde** paket özeti gösterir (TCP/UDP/DNS/ICMP/ARP) |
 | `port` | Hedefte açık TCP portlarını tarar |
+| `guncelle` | Yeni sürüm varsa indirir ve programı günceller |
 
 ## Ne yapmaz? (bilinçli tasarım kararları)
 
@@ -32,6 +33,16 @@ Derleme gerekmeden hazır sürümler: **[Releases](https://github.com/cn-Ky/Turt
 - macOS (Apple Silicon): `...-aarch64-apple-darwin.tar.gz`
 - macOS (Intel): `...-x86_64-apple-darwin.tar.gz`
 - Linux: `...-x86_64-unknown-linux-gnu.tar.gz`
+
+## Güncelleme
+
+`main` dalına yapılan her değişiklik otomatik olarak yeni bir sürüm olarak yayınlanır.
+
+- Program çalışırken günde en fazla bir kez, arka planda yeni sürüm kontrol edilir; varsa komut bitince kısa bir bildirim görürsün. Hiçbir şey kendiliğinden kurulmaz.
+- Güncellemek için: `turtle guncelle` (onay sormadan: `turtle guncelle --evet`)
+- Program korumalı bir klasördeyse (ör. `/usr/local/bin`) `sudo turtle guncelle` gerekebilir.
+- Bildirimi kapatmak için ortam değişkeni: `TURTLE_GUNCELLEME_KONTROLU=0`
+- Kaynaktan derlenen sürümler kendini `0.1.0` olarak tanır; hazır sürümü Releases'tan indirmek en doğrusudur.
 
 ## Kaynaktan Kurulum
 
@@ -76,6 +87,7 @@ src/
   capture.rs  başlık düzeyinde paket özeti
   ports.rs    eşzamanlı TCP connect taraması (tokio)
   oui.rs      MAC → üretici eşleme
+  guncelle.rs otomatik güncelleme (GitHub Releases)
 ```
 
 ## Yol haritası (fikirler)

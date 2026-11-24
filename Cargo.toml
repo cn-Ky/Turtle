@@ -14,3 +14,5 @@ dns-lookup = "2"
 pnet = "0.35"
 serde_json = "1"
 tokio = { version = "1", features = ["rt-multi-thread", "net", "time", "macros", "sync"] }
+dirs = "5"
+self_update = { version = "0.41", default-features = false, features = ["rustls", "archive-tar", "archive-zip", "compression-flate2", "compression-zip-deflate"] }
