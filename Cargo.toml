@@ -1,0 +1,16 @@
+[package]
+name = "agtarayici"
+version = "0.1.0"
+edition = "2021"
+description = "Eğitim amaçlı, Türkçe ağ analiz aracı (Wi-Fi, yerel ağ keşfi, paket yakalama, port tarama)"
+license = "MIT"
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+colored = "2"
+ctrlc = "3"
+dns-lookup = "2"
+pnet = "0.35"
+serde_json = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "net", "time", "macros", "sync"] }
