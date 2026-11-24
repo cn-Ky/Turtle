@@ -77,9 +77,3 @@ Windows: `run.bat`
 - Wi-Fi listeleme işletim sisteminin kendi tarama komutlarını kullanır; paket enjeksiyonu veya deauthentication yapmaz.
 
 Bu proje eğitim ve yetkili ağ yönetimi içindir. İzinsiz tarama/dinleme veya erişim hukuki sorumluluk doğurabilir.
-
-## Proje bilgisi
-
-Bu GUI yeniden yazımı, [cn-Ky/Turtle](https://github.com/cn-Ky/Turtle) deposundaki özellik kapsamından hareketle hazırlanmıştır. Orijinal depo MIT lisanslıdır. Bu paketteki GUI kodu Python ile yeniden uygulanmıştır; orijinal Rust CLI ikilisi pakete dahil değildir. Orijinal CLI'nin kendi kendini ikili dosya olarak güncelleme komutu bu kaynak paketinde bulunmaz; uygulamadaki GitHub bağlantısından proje sayfası takip edilebilir.
-
-Sürüm: `1.0.0`
