@@ -1,4 +1,4 @@
-//! agtarayici — eğitim amaçlı, Türkçe ağ analiz aracı.
+//! Turtle — eğitim amaçlı, Türkçe ağ analiz aracı.
 //!
 //! Tasarım ilkeleri:
 //!  * Wi-Fi taraması pasiftir (işletim sisteminin kendi taramasını kullanır).
@@ -18,7 +18,7 @@ use std::net::IpAddr;
 
 #[derive(Parser)]
 #[command(
-    name = "agtarayici",
+    name = "turtle",
     version,
     about = "Eğitim amaçlı, Türkçe ağ analiz aracı: Wi-Fi, yerel ağ keşfi, paket yakalama, port tarama"
 )]

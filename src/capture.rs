@@ -131,7 +131,7 @@ pub fn yakala(arayuz_adi: &str, sayi: usize, filtre: Option<String>) -> Result<(
     let filtre = filtre_coz(filtre)?;
     let arayuz = match datalink::interfaces().into_iter().find(|a| a.name == arayuz_adi) {
         Some(a) => a,
-        None => bail!("'{}' bulunamadı. `agtarayici arayuzler` ile listele.", arayuz_adi),
+        None => bail!("'{}' bulunamadı. `turtle arayuzler` ile listele.", arayuz_adi),
     };
     let cfg = Config { read_timeout: Some(Duration::from_millis(250)), ..Default::default() };
     let mut rx = match datalink::channel(&arayuz, cfg) {

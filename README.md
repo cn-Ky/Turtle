@@ -1,4 +1,4 @@
-# agtarayici — Türkçe Ağ Analiz Aracı (Eğitim Amaçlı)
+# 🐢 Turtle — Türkçe Ağ Analiz Aracı (Eğitim Amaçlı)
 
 Rust ile yazılmış, Windows / macOS / Linux üzerinde çalışan, sade ve Türkçe arayüzlü bir ağ analiz aracı.
 
@@ -24,11 +24,20 @@ Rust ile yazılmış, Windows / macOS / Linux üzerinde çalışan, sade ve Tür
 - İnternetteki (özel olmayan) hedeflerde port tarama için `--yetkili` bayrağı zorunludur.
 - Kişi veya cihaz takibi / konumlandırma özelliği yoktur.
 
-## Kurulum
+## İndir
+
+Derleme gerekmeden hazır sürümler: **[Releases](https://github.com/cn-Ky/Turtle/releases)**
+
+- Windows: `turtle-...-x86_64-pc-windows-msvc.zip` (Npcap gerekir)
+- macOS (Apple Silicon): `...-aarch64-apple-darwin.tar.gz`
+- macOS (Intel): `...-x86_64-apple-darwin.tar.gz`
+- Linux: `...-x86_64-unknown-linux-gnu.tar.gz`
+
+## Kaynaktan Kurulum
 
 ```bash
-git clone <depo-adresi>
-cd agtarayici
+git clone https://github.com/cn-Ky/Turtle.git
+cd Turtle
 cargo build --release
 ```
 
@@ -42,14 +51,14 @@ Gereksinimler:
 ## Kullanım
 
 ```bash
-agtarayici arayuzler
-agtarayici wifi
-sudo agtarayici lan
-sudo agtarayici lan --arayuz wlan0
-sudo agtarayici yakala eth0 --sayi 50 --filtre dns
-sudo agtarayici yakala wlan0 --filtre port:443
-agtarayici port 192.168.1.1 --aralik 1-1024
-agtarayici port 203.0.113.10 --aralik 22,80,443 --yetkili
+turtle arayuzler
+turtle wifi
+sudo turtle lan
+sudo turtle lan --arayuz wlan0
+sudo turtle yakala eth0 --sayi 50 --filtre dns
+sudo turtle yakala wlan0 --filtre port:443
+turtle port 192.168.1.1 --aralik 1-1024
+turtle port 203.0.113.10 --aralik 22,80,443 --yetkili
 ```
 
 ## Üretici (OUI) veritabanı

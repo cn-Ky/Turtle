@@ -1,8 +1,8 @@
 [package]
-name = "agtarayici"
+name = "turtle"
 version = "0.1.0"
 edition = "2021"
-description = "Eğitim amaçlı, Türkçe ağ analiz aracı (Wi-Fi, yerel ağ keşfi, paket yakalama, port tarama)"
+description = "Turtle: eğitim amaçlı, Türkçe ağ analiz aracı (Wi-Fi, yerel ağ keşfi, paket yakalama, port tarama)"
 license = "MIT"
 
 [dependencies]
