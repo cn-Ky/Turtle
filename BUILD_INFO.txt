@@ -1,0 +1,10 @@
+Turtle GUI 1.0.0
+
+Package type: cross-platform Python desktop application source bundle.
+GUI: Tkinter / ttk
+Required runtime dependency: psutil
+Optional packet capture dependency: Scapy + libpcap (macOS/Linux) or Npcap (Windows)
+
+This ZIP does not contain a precompiled macOS .app, Windows .exe, or Linux binary.
+Launch instructions are in README.md. run.sh / run.bat create a local virtual environment
+and install the declared Python dependency on first launch.
